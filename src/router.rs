@@ -1,7 +1,7 @@
 use yew::{Html, html};
 use yew_router::{Routable, prelude::Redirect};
 
-use crate::components::pages::{HomePage, NotFoundPage, ProgramPage};
+use crate::components::pages::{HomePage, NotFoundPage, ProgramPage, AboutPage};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Routable)]
 pub enum Route {
@@ -16,10 +16,10 @@ pub enum Route {
 
 pub fn switch(route: Route) -> Html {
     match route {
-        Route::Root => html! { <Redirect<Route> to={Route::Home}/> },
-        Route::Home => html! { <HomePage/> },
-        Route::About => todo!(),
-        Route::Program => html! { <ProgramPage/> },
-        Route::NotFound => html! { <NotFoundPage/> },
+        Route::Root => html!        { <Redirect<Route> to={Route::Home}/> },
+        Route::Home => html!        { <HomePage/> },
+        Route::About => html!       { <AboutPage/> },
+        Route::Program => html!     { <ProgramPage/> },
+        Route::NotFound => html!    { <NotFoundPage/> },
     }
 }
