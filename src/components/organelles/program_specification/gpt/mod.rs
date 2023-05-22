@@ -1,6 +1,8 @@
 use stylist::{Style, style};
 use yew::{Html, html, Properties, Children, Component, Context, MouseEvent};
 
+use crate::components::atoms::AutosizeTextArea;
+
 #[derive(PartialEq,Properties)]
 pub struct Props {}
 
@@ -21,6 +23,7 @@ impl Component for GPTBlock {
         html! {
             <div>
                 <p>{"I am a gpt block!"}</p>
+                <AutosizeTextArea/>
             </div>
         }
     }
