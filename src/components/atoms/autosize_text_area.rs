@@ -3,7 +3,6 @@ use stylist::{Style, style};
 use wasm_bindgen::JsCast;
 use web_sys::HtmlTextAreaElement;
 use yew::{Html, html, Properties, Children, Component, Context, MouseEvent, Callback};
-use yew_stdweb::ChangeData;
 
 #[derive(PartialEq,Properties)]
 pub struct Props {}
@@ -81,4 +80,9 @@ impl Component for AutosizeTextArea {
             Msg::TextBoxTyping((scroll_height,rows)) => self.update_sizes(scroll_height, rows),
         }; true
     }
+
+    fn rendered(&mut self, ctx: &Context<Self>, first_render: bool) {
+        //log!(self.text_area_height);
+    }
+
 }
