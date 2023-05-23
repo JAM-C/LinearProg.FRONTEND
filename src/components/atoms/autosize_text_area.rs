@@ -16,7 +16,7 @@ Math from https://upmostly.com/tutorials/autosizing-textarea-react
  */
 #[derive(Default)]
 pub struct AutosizeTextArea {
-    text_area_height: i32,
+    text_area_rows: i32,
     scroll_height: i32,
     rows: u32,
 }
@@ -25,6 +25,9 @@ impl AutosizeTextArea {
     // CSS
     fn textarea_style(&self) -> Style {
         style!(r#"
+            resizable: none;
+            width: 100%;
+            minwidth: 100%;
         "#).unwrap()
     }
 
@@ -39,7 +42,7 @@ impl AutosizeTextArea {
         let row_height = 15; 
         let div = (height as f64) / (row_height as f64);
         let trows = (div.ceil() as i32) - 1; 
-        self.text_area_height = trows;
+        self.text_area_rows = trows;
     }
 
     fn adjust_height_callback(&self, ctx: &Context<Self>) -> Callback<yew::Event> {
@@ -59,17 +62,17 @@ impl Component for AutosizeTextArea {
 
     fn create(_ctx: &Context<Self>) -> Self { 
         Self {
-            text_area_height: 100,
+            text_area_rows: 1,
             ..Default::default()
         }
     }
 
     // HTML stuff
     fn view(&self, ctx: &Context<Self>) -> Html {
-        log!(self.text_area_height);
+        log!(self.text_area_rows);
         html! { <textarea
                 class = { self.textarea_style() }
-                height = { self.text_area_height.to_string() + "px" }
+                rows = { self.text_area_rows.to_string() }
                 onchange = { self.adjust_height_callback(ctx) }
             />
         }
@@ -78,11 +81,10 @@ impl Component for AutosizeTextArea {
     fn update(&mut self, _: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
             Msg::TextBoxTyping((scroll_height,rows)) => self.update_sizes(scroll_height, rows),
-        }; true
+        }; log!(self.text_area_rows); true
     }
 
     fn rendered(&mut self, ctx: &Context<Self>, first_render: bool) {
-        //log!(self.text_area_height);
     }
 
 }

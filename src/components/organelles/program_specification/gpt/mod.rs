@@ -22,7 +22,7 @@ impl Component for GPTBlock {
     fn view(&self, ctx: &Context<Self>) -> Html {
         html! {
             <div>
-                <p>{"I am a gpt block!"}</p>
+                <p>{"Hey, check it out, I am a gpt block!"}</p>
                 <AutosizeTextArea/>
             </div>
         }
