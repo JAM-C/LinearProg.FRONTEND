@@ -34,8 +34,12 @@ impl Component for ProgramSpecification {
         html! {
             <div>
                 <GPTBlock/>
-                <TableBlock/>
-                <CodeBlock/>
+                <div display = "inline-block">
+                    <TableBlock/>
+                </div>
+                <div display = "inline-block">
+                    <CodeBlock/>
+                </div>
             </div>
         }
     }
