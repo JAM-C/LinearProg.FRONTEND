@@ -11,7 +11,13 @@ pub enum Msg {}
 pub struct HorizontalAdjustableDiv;
 
 impl HorizontalAdjustableDiv {
-    fn style(&self) -> Style {
+    fn container_style(&self) -> Style {
+        style!(r#"
+            
+        "#).unwrap()
+    }
+
+    fn contained_style(&self) -> Style {
         style!(r#"
             
         "#).unwrap()
@@ -28,10 +34,18 @@ impl Component for HorizontalAdjustableDiv {
 
     // HTML stuff
     fn view(&self, ctx: &Context<Self>) -> Html {
+        let children = ctx.props().children.clone();
         html! {
-            <div class = { self.style() }>
-                { ctx.props().children.clone() }
-            </div>
+            // External container
+            <div class = { self.container_style() }>{
+                // Place each child
+                children.iter().map(|child| { html!{
+                    // Into an internal container
+                    <div class = { self.contained_style() }>
+                        { child }
+                    </div>
+                }}).collect::<Html>()
+            } </div>
         }
     }
 
