@@ -1,25 +1,24 @@
 use stylist::{Style, style};
 use yew::{Html, html, Properties, Children, Component, Context, MouseEvent};
 
-use gpt::GPTBlock;
-use table::TableBlock;
-use code::CodeBlock;
-
-use crate::components::molecules::HorizontalAdjustableDiv;
-
-mod gpt;
-mod table;
-mod code;
-
 #[derive(PartialEq,Properties)]
 pub struct Props {
+    pub children: Children
 }
 
 pub enum Msg {}
 
-pub struct ProgramSpecification;
+pub struct HorizontalAdjustableDiv;
 
-impl Component for ProgramSpecification {
+impl HorizontalAdjustableDiv {
+    fn style(&self) -> Style {
+        style!(r#"
+            
+        "#).unwrap()
+    }
+}
+
+impl Component for HorizontalAdjustableDiv {
     type Message = Msg;
     type Properties = Props;
 
@@ -30,12 +29,8 @@ impl Component for ProgramSpecification {
     // HTML stuff
     fn view(&self, ctx: &Context<Self>) -> Html {
         html! {
-            <div>
-                <GPTBlock/>
-                <HorizontalAdjustableDiv>
-                    <TableBlock/>
-                    <CodeBlock/>
-                </HorizontalAdjustableDiv>
+            <div class = { self.style() }>
+                { ctx.props().children.clone() }
             </div>
         }
     }
