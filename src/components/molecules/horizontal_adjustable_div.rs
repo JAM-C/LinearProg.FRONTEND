@@ -13,13 +13,16 @@ pub struct HorizontalAdjustableDiv;
 impl HorizontalAdjustableDiv {
     fn container_style(&self) -> Style {
         style!(r#"
-            
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
         "#).unwrap()
     }
 
     fn contained_style(&self) -> Style {
         style!(r#"
-            
+            flex-grow: 1;
         "#).unwrap()
     }
 }
