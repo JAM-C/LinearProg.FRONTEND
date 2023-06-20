@@ -27,6 +27,9 @@ pub struct TableBlock {
 impl TableBlock {
     fn new_row_callback(&self, ctx: &Context<Self>) -> Callback<yew::MouseEvent>
         { ctx.link().callback( |_ : yew::MouseEvent| { Msg::NewRow } ) }
+
+    fn delete_row_callback(&self, ctx: &Context<Self>, row: usize) -> Callback<yew::MouseEvent>
+        { ctx.link().callback( move |_ : yew::MouseEvent| { Msg::DeleteRow(row) } ) }
 }
 
 impl Component for TableBlock {
@@ -53,12 +56,14 @@ impl Component for TableBlock {
                     // Add each row
                     {
                         self.rows.iter()
-                            .map(|row| { html!{
+                            .enumerate()
+                            .map(|(index,row)| { html!{
                                 <tr>
                                     <th><input type = "text"/></th>
                                     <th>{">="}</th>
                                     <th><input type = "text"/></th>
                                     <th><input type = "text"/></th>
+                                    <th><button onclick={self.delete_row_callback(ctx,index)}>{"Delete"}</button></th>
                                 </tr>
                             }})
                             .collect::<Html>()
@@ -71,8 +76,8 @@ impl Component for TableBlock {
 
     fn update(&mut self, _: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
-            Msg::NewRow => self.rows.push(TableRow::default()),
-            Msg::DeleteRow(_) => todo!(),
+            Msg::NewRow => { self.rows.push(TableRow::default()); },
+            Msg::DeleteRow(index) => { self.rows.remove(index); },
         };
         true
     }
