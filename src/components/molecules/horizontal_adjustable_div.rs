@@ -1,5 +1,5 @@
 use stylist::{Style, style};
-use yew::{Html, html, Properties, Children, Component, Context, MouseEvent};
+use yew::{Html, html, Properties, Children, Component, Context};
 
 #[derive(PartialEq,Properties)]
 pub struct Props {
@@ -20,9 +20,19 @@ impl HorizontalAdjustableDiv {
         "#).unwrap()
     }
 
-    fn contained_style(&self) -> Style {
+    fn contained_style_1(&self) -> Style {
         style!(r#"
             flex-grow: 1;
+            resize: horizontal;
+            overflow: auto;
+            border: 2px solid;
+        "#).unwrap()
+    }
+
+    fn contained_style_2(&self) -> Style {
+        style!(r#"
+            flex-grow: 1;
+            border: 2px solid;
         "#).unwrap()
     }
 }
@@ -37,22 +47,34 @@ impl Component for HorizontalAdjustableDiv {
 
     // HTML stuff
     fn view(&self, ctx: &Context<Self>) -> Html {
-        let children = ctx.props().children.clone();
+        // Get the children
+        let children: Vec<_> = ctx.props().children.clone().iter().collect();
+        // Map them onto a tuple containing themselves, plus whether they are the final element
+        let final_index = children.len() - 1;
+        let children = children.iter().enumerate().map(
+                |(index, child)| { (child, index == final_index) }
+        );
+        // Return html containing
         html! {
             // External container
             <div class = { self.container_style() }>{
-                // Place each child
-                children.iter().map(|child| { html!{
-                    // Into an internal container
-                    <div class = { self.contained_style() }>
-                        { child }
-                    </div>
+                // Iterate through children
+                children    
+                    // Adding them into an internal container
+                    .map(|(child, final_element)| { html!{
+                    <div class = {
+                        // Whose style depends on whether it is the final element 
+                        match final_element {
+                            false => self.contained_style_1(),
+                            true => self.contained_style_2(),
+                        }
+                    }> { child.clone() } </div>
                 }}).collect::<Html>()
             } </div>
         }
     }
 
-    fn update(&mut self, _: &Context<Self>, msg: Self::Message) -> bool {
+    fn update(&mut self, _: &Context<Self>, _: Self::Message) -> bool {
         true
     }
 }
