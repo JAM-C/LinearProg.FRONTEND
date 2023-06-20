@@ -25,7 +25,7 @@ impl AutosizeTextArea {
     // CSS
     fn textarea_style(&self) -> Style {
         style!(r#"
-            resizable: none;
+            resize: vertical;
             width: 100%;
             minwidth: 100%;
         "#).unwrap()
