@@ -1,6 +1,11 @@
 mod row;
 
+use std::mem;
+
+use gloo::console::log;
 use stylist::{Style, style};
+use wasm_bindgen::JsCast;
+use web_sys::HtmlInputElement;
 use yew::{Html, html, Properties, Component, Context, Callback};
 
 use self::row::TableRow;
@@ -10,7 +15,11 @@ pub struct Props {}
 
 pub enum Msg {
     NewRow,
-    DeleteRow(usize)
+    DeleteRow(usize),
+    UpdateConstraint(usize,String),
+    UpdateOp(usize,String),
+    UpdateValue(usize,String),
+    UpdateComment(usize,String),
 }
 
 /**
@@ -24,12 +33,34 @@ pub struct TableBlock {
     rows: Vec<TableRow>
 }
 
+fn unwrap_input_event(event: yew::Event) -> String {
+    let target = event.target().unwrap();
+    let input = target.unchecked_into::<HtmlInputElement>();
+    return input.value();
+            
+}
+
 impl TableBlock {
+    // New and delete callbacks
     fn new_row_callback(&self, ctx: &Context<Self>) -> Callback<yew::MouseEvent>
         { ctx.link().callback( |_ : yew::MouseEvent| { Msg::NewRow } ) }
 
-    fn delete_row_callback(&self, ctx: &Context<Self>, row: usize) -> Callback<yew::MouseEvent>
-        { ctx.link().callback( move |_ : yew::MouseEvent| { Msg::DeleteRow(row) } ) }
+    fn delete_row_callback(&self, ctx: &Context<Self>, index: usize) -> Callback<yew::MouseEvent>
+        { ctx.link().callback( move |_ : yew::MouseEvent| { Msg::DeleteRow(index) } ) }
+    
+    // Update callbacks
+    fn update_constraint_callback(&self, ctx: &Context<Self>, index: usize) -> Callback<yew::Event>
+        { ctx.link().callback( move |event : yew::Event| { Msg::UpdateConstraint(index,unwrap_input_event(event)) } ) }
+    
+    fn update_op_callback(&self, ctx: &Context<Self>, index: usize) -> Callback<yew::Event>
+        { ctx.link().callback( move |event : yew::Event| { Msg::UpdateOp(index,unwrap_input_event(event)) } ) }
+
+    fn update_value_callback(&self, ctx: &Context<Self>, index: usize) -> Callback<yew::Event>
+        { ctx.link().callback( move |event : yew::Event| { Msg::UpdateValue(index,unwrap_input_event(event)) } ) }
+
+    fn update_comment_callback(&self, ctx: &Context<Self>, index: usize) -> Callback<yew::Event>
+        { ctx.link().callback( move |event : yew::Event| { Msg::UpdateComment(index,unwrap_input_event(event)) } ) }
+    
 }
 
 impl Component for TableBlock {
@@ -59,10 +90,10 @@ impl Component for TableBlock {
                             .enumerate()
                             .map(|(index,row)| { html!{
                                 <tr>
-                                    <th><input type = "text"/></th>
+                                    <th><input type = "text" value = {row.constraint.clone()} onchange = { self.update_constraint_callback(ctx, index) }/></th>
                                     <th>{">="}</th>
-                                    <th><input type = "text"/></th>
-                                    <th><input type = "text"/></th>
+                                    <th><input type = "text" value = {row.value.clone()} onchange = { self.update_value_callback(ctx, index) }/></th>
+                                    <th><input type = "text" value = {row.comment.clone()} onchange = { self.update_comment_callback(ctx, index) }/></th>
                                     <th><button onclick={self.delete_row_callback(ctx,index)}>{"Delete"}</button></th>
                                 </tr>
                             }})
@@ -78,6 +109,10 @@ impl Component for TableBlock {
         match msg {
             Msg::NewRow => { self.rows.push(TableRow::default()); },
             Msg::DeleteRow(index) => { self.rows.remove(index); },
+            Msg::UpdateConstraint(index, constraint) => { self.rows[index] = self.rows[index].with_constraint(constraint); },
+            Msg::UpdateOp(_, _) => todo!(),
+            Msg::UpdateValue(index, value) => { self.rows[index] = self.rows[index].with_value(value); },
+            Msg::UpdateComment(index, comment) => { self.rows[index] = self.rows[index].with_comment(comment); },
         };
         true
     }
