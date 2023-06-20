@@ -1,7 +1,7 @@
 mod row;
 
 use stylist::{Style, style};
-use yew::{Html, html, Properties, Children, Component, Context, MouseEvent};
+use yew::{Html, html, Properties, Component, Context, Callback};
 
 use self::row::TableRow;
 
@@ -22,6 +22,11 @@ Where the user can insert constraints for the constraint satisfaction problem
  */
 pub struct TableBlock {
     rows: Vec<TableRow>
+}
+
+impl TableBlock {
+    fn new_row_callback(&self, ctx: &Context<Self>) -> Callback<yew::MouseEvent>
+        { ctx.link().callback( |_ : yew::MouseEvent| { Msg::NewRow } ) }
 }
 
 impl Component for TableBlock {
@@ -50,20 +55,25 @@ impl Component for TableBlock {
                         self.rows.iter()
                             .map(|row| { html!{
                                 <tr>
-                                    <th>{row.constraint.clone()}</th>
+                                    <th><input type = "text"/></th>
                                     <th>{">="}</th>
-                                    <th>{row.value.clone()}</th>
-                                    <th>{row.comment.clone()}</th>
+                                    <th><input type = "text"/></th>
+                                    <th><input type = "text"/></th>
                                 </tr>
                             }})
                             .collect::<Html>()
                     }
                 </table>
+                <button onclick={self.new_row_callback(ctx)}>{"New row"}</button>
             </div>
         }
     }
 
     fn update(&mut self, _: &Context<Self>, msg: Self::Message) -> bool {
+        match msg {
+            Msg::NewRow => self.rows.push(TableRow::default()),
+            Msg::DeleteRow(_) => todo!(),
+        };
         true
     }
 }
