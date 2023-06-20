@@ -20,7 +20,13 @@ impl Component for TableBlock {
     fn view(&self, ctx: &Context<Self>) -> Html {
         html! {
             <div>
-                <p>{"I am a table block!"}</p>
+                <table>
+                    <tr>
+                        <th>{"Equation"}</th>
+                        <th>{"Var 1"}</th>
+                        <th>{"Var 2"}</th>
+                    </tr>
+                </table>
             </div>
         }
     }
