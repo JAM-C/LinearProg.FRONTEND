@@ -1,6 +1,6 @@
 use super::row::TableRow;
 
-#[derive(Default)]
+#[derive(Default, PartialEq)]
 pub struct Table {
     pub rows: Vec<TableRow>
 }

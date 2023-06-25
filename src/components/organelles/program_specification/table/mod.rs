@@ -15,6 +15,7 @@ use self::row::TableRow;
 
 #[derive(PartialEq,Properties)]
 pub struct Props {
+    pub updated_value: Option<Table>,
     pub onupdate: Callback<Table>
 }
 

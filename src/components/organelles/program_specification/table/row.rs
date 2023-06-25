@@ -1,10 +1,10 @@
-#[derive(Default,Clone)]
+#[derive(Default,Clone,PartialEq)]
 pub enum Op {
     #[default]
     Ge,Geq,Le,Leq
 }
 
-#[derive(Default,Clone)]
+#[derive(Default,Clone,PartialEq)]
 pub struct TableRow {
     pub constraint: String,
     pub op: Op,

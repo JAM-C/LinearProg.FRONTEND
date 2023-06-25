@@ -46,7 +46,7 @@ impl Component for ProgramSpecification {
             <div>
                 <GPTBlock/>
                 <HorizontalAdjustableDiv>
-                    <TableBlock onupdate = { self.update_table_callback(ctx) }/>
+                    <TableBlock updated_value = { None } onupdate = { self.update_table_callback(ctx) }/>
                     <CodeBlock/>
                 </HorizontalAdjustableDiv>
             </div>
