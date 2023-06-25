@@ -15,7 +15,7 @@ use self::row::TableRow;
 
 #[derive(PartialEq,Properties)]
 pub struct Props {
-    pub onupdate: Callback<Vec<TableRow>>
+    pub onupdate: Callback<Table>
 }
 
 pub enum Msg {

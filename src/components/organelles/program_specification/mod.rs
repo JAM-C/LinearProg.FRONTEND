@@ -1,5 +1,5 @@
 use stylist::{Style, style};
-use yew::{Html, html, Properties, Children, Component, Context, MouseEvent};
+use yew::{Html, html, Properties, Children, Component, Context, MouseEvent, Callback};
 
 use gpt::GPTBlock;
 use table::TableBlock;
@@ -24,7 +24,12 @@ pub enum Msg {
 pub struct ProgramSpecification;
 
 impl ProgramSpecification {
-    
+    // Update callbacks
+    fn update_table_callback(&self, ctx: &Context<Self>) -> Callback<Table>
+        { ctx.link().callback( move |table : Table| { Msg::TableUpdated(table) } ) }
+
+    fn update_code_callback(&self, ctx: &Context<Self>) -> Callback<String>
+        { ctx.link().callback( move |code : String| { Msg::CodeUpdated(code) } ) }
 }
 
 impl Component for ProgramSpecification {
@@ -41,7 +46,7 @@ impl Component for ProgramSpecification {
             <div>
                 <GPTBlock/>
                 <HorizontalAdjustableDiv>
-                    <TableBlock onupdate = {}/>
+                    <TableBlock onupdate = { self.update_table_callback(ctx) }/>
                     <CodeBlock/>
                 </HorizontalAdjustableDiv>
             </div>
