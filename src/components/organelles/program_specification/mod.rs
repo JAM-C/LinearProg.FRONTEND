@@ -7,17 +7,25 @@ use code::CodeBlock;
 
 use crate::components::molecules::HorizontalAdjustableDiv;
 
+use self::table::Table;
+
 mod gpt;
 mod table;
 mod code;
 
 #[derive(PartialEq,Properties)]
-pub struct Props {
+pub struct Props {}
+
+pub enum Msg {
+    TableUpdated(Table),
+    CodeUpdated(String),
 }
 
-pub enum Msg {}
-
 pub struct ProgramSpecification;
+
+impl ProgramSpecification {
+    
+}
 
 impl Component for ProgramSpecification {
     type Message = Msg;
@@ -33,7 +41,7 @@ impl Component for ProgramSpecification {
             <div>
                 <GPTBlock/>
                 <HorizontalAdjustableDiv>
-                    <TableBlock/>
+                    <TableBlock onupdate = {}/>
                     <CodeBlock/>
                 </HorizontalAdjustableDiv>
             </div>

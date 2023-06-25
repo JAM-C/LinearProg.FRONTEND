@@ -1,4 +1,7 @@
+mod structure;
 mod row;
+
+pub use structure::Table;
 
 use std::mem;
 
@@ -11,7 +14,9 @@ use yew::{Html, html, Properties, Component, Context, Callback};
 use self::row::TableRow;
 
 #[derive(PartialEq,Properties)]
-pub struct Props {}
+pub struct Props {
+    pub onupdate: Callback<Vec<TableRow>>
+}
 
 pub enum Msg {
     NewRow,
@@ -30,7 +35,7 @@ A table in the form:
 Where the user can insert constraints for the constraint satisfaction problem
  */
 pub struct TableBlock {
-    rows: Vec<TableRow>
+    table: Table
 }
 
 fn unwrap_input_event(event: yew::Event) -> String {
@@ -68,7 +73,7 @@ impl Component for TableBlock {
     type Properties = Props;
 
     fn create(_ctx: &Context<Self>) -> Self { 
-        Self { rows: Vec::new() }
+        Self { table: Table::default() }
     }
 
     // HTML stuff
@@ -86,7 +91,7 @@ impl Component for TableBlock {
                     </tr>
                     // Add each row
                     {
-                        self.rows.iter()
+                        self.table.rows.iter()
                             .enumerate()
                             .map(|(index,row)| { html!{
                                 <tr>
@@ -107,12 +112,12 @@ impl Component for TableBlock {
 
     fn update(&mut self, _: &Context<Self>, msg: Self::Message) -> bool {
         match msg {
-            Msg::NewRow => { self.rows.push(TableRow::default()); },
-            Msg::DeleteRow(index) => { self.rows.remove(index); },
-            Msg::UpdateConstraint(index, constraint) => { self.rows[index] = self.rows[index].with_constraint(constraint); },
+            Msg::NewRow => { self.table.new_row() },
+            Msg::DeleteRow(index) => { self.table.delete_row(index) },
+            Msg::UpdateConstraint(index, constraint) => { self.table.update_constraint(index,constraint) },
             Msg::UpdateOp(_, _) => todo!(),
-            Msg::UpdateValue(index, value) => { self.rows[index] = self.rows[index].with_value(value); },
-            Msg::UpdateComment(index, comment) => { self.rows[index] = self.rows[index].with_comment(comment); },
+            Msg::UpdateValue(index, value) => { self.table.update_value(index,value) },
+            Msg::UpdateComment(index, comment) => { self.table.update_comment(index,comment) },
         };
         true
     }
